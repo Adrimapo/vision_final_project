@@ -1,11 +1,11 @@
 # comp_vision_final_project
 
 <div align="center">
-<img width=390px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/portada.png" alt="explode"></a>
-<img width=410px heigh=500px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/original.png" alt="explode"></a>
+<img width=460px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/portada.png" alt="explode"></a>
+<img width=480px heigh=500px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/original.png" alt="explode"></a>
 </div>
 
-
+<br>
 <div align="center">
 <img width=100px src="https://img.shields.io/badge/status-finished-brightgreen" alt="explode"></a>
 <img width=100px src="https://img.shields.io/badge/license-Apache-orange" alt="explode"></a>
