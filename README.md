@@ -153,7 +153,7 @@ Here we can see how two spheres are mistaken for the same one. (Purple)
 ## trace_bar_node
 A node was created that displayed 6 tracebars and published their results to a topic, which was later subscribed to by the cv_pcl-node to properly adjust the color filters.
 <div align="center">
-<img width=500px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/trace_bars.png" alt="explode"></a>
+<img width=200px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/trace_bars.png" alt="explode"></a>
 </div>
 
 
