@@ -10,6 +10,10 @@ The first step is to identify a person. If the robot locates the person, it will
 
 Both the center and the projection of the ball will be shown in both dimensions, and then the 3D center will be shown in the 2D image, and the 2D center will be shown in the 3D image.
 
+## Color spaces
+Using different color spaces for image filtering and point cloud filtering can add more robustness to the detection process. HSV color space is often used for image processing because it separates hue, saturation, and value/brightness components, making it easier to work with colors. On the other hand, RGB color space is commonly used for point clouds because it represents the color of each point as a combination of red, green, and blue channels. By using both color spaces, we can take advantage of the strengths of each space and improve the accuracy of the detection.
+
+
 ### Comunication between nodes
 We will use the following diagram to conect the nodes:
 
@@ -73,6 +77,18 @@ In the callback function of the OpenCV node, a point of this radius was calculat
 
 ### Detect the 3D spheres with K-means algorithm
 
+ Definition:
+ 
+ > The K-means algorithm is a clustering algorithm that partitions a dataset into K clusters, where K is a user-defined number of clusters. The algorithm assigns each data point to the cluster whose centroid is closest, with the centroids being the means of the data points assigned to each cluster.<br><br>
+ The algorithm works by initializing the centroids randomly and iteratively optimizing the assignment of points to clusters and the position of the centroids until convergence.
+
+The implementation allowed the user to choose the desired number of clusters. If there are multiple objects and only one cluster, the center of these objects will be shown. If there are the same number of clusters as there are spheres, ideally the same number of centers as spheres will be shown. However, sometimes a cluster is generated far away and another one has both spheres, which can be resolved by increasing the number of clusters.
+ 
+The problem with creating too many clusters is that it may detect the same sphere multiple times and divide it into 2 or more clusters.
+
+!!!!!!!! Insertar varias imagenes de los clusters
+ 
+Furthermore, even though it decreased performance, the point cloud was iterated again and each point was colored according to which cluster it belonged to, showing which areas were affected by each cluster.
 
 ## trace_bar_node
 A node was created that displayed 6 tracebars and published their results to a topic, which was later subscribed to by the cv_pcl-node to properly adjust the color filters.
