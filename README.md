@@ -1,8 +1,8 @@
 # comp_vision_final_project
 
 <div align="center">
-<img width=490px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/portada.png" alt="explode"></a>
-<img width=510px heigh=500px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/original.png" alt="explode"></a>
+<img width=390px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/portada.png" alt="explode"></a>
+<img width=410px heigh=500px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/original.png" alt="explode"></a>
 </div>
 
 
@@ -50,9 +50,13 @@ Using different color spaces for image filtering and point cloud filtering can a
 ### Comunication between nodes
 We will use the following diagram to conect the nodes:
 
-!!!!!!! Insertar imagen de la comunicación de nodos
+<div align="center">
+<img heigh=400px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/topics.png" alt="explode"></a>
+</div>
 
-!!!!!!! Explicar a partir de la imagen la comunicación
+The OpenCV node sends data from the trace bars and the 3D sphere centers on two separate topics to which the PCL node subscribes. The PCL node only publishes the 3D centers along with the radii of the spheres.
+
+Regarding the topics of the centers, the first element is the number of spheres, followed by the next 3 or 4 elements which correspond to x, y, z, and r in the case of the PCL node.
 
 <!-- ### 2D Ball detection
  ### 3D Ball detection -->
@@ -104,8 +108,8 @@ std::vector<cv::Rect> detect_people(cv::Mat img)
 ```
 
 <div align="center">
-<img width=500px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/person_track.png" alt="explode"></a>
-<img width=500px heigh=500px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/without_person.png" alt="explode"></a>
+<img width=400px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/person_track.png" alt="explode"></a>
+<img width=400px heigh=500px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/without_person.png" alt="explode"></a>
 </div>
 
 -----------------------------------------------------------------------
@@ -118,7 +122,7 @@ Taking advantage of the fact that the RANSAC method used to calculate the center
 In the callback function of the OpenCV node, a point of this radius was calculated by adding the radius to one component of the center. Then, the distance between the center and the new point generated in 2D was obtained to calculate the radius in 2D.
 
 <br><div align="center">
-<img width=950px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/3k.png" alt="explode"></a>
+<img width=800px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/3k.png" alt="explode"></a>
 </div>
 
 -----------------------------------------------------------------------
@@ -132,15 +136,14 @@ In the callback function of the OpenCV node, a point of this radius was calculat
 
 The implementation allowed the user to choose the desired number of clusters. If there are multiple objects and only one cluster, the center of these objects will be shown. If there are the same number of clusters as there are spheres, ideally the same number of centers as spheres will be shown. However, sometimes a cluster is generated far away and another one has both spheres, which can be resolved by increasing the number of clusters.
  
-<br><div align="center">
-<img width=950px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/1k.png" alt="explode"></a>
-</div><br>
-
+ Furthermore, even though it decreased performance, the point cloud was iterated again and each point was colored according to which cluster it belonged to, showing which areas were affected by each cluster.
  
-Furthermore, even though it decreased performance, the point cloud was iterated again and each point was colored according to which cluster it belonged to, showing which areas were affected by each cluster.
+<div align="center">
+<img width=800px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/1k.png" alt="explode"></a>
+</div>
 
 <br><div align="center">
-<img width=950px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/bug.png" alt="explode"></a>
+<img width=800px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/bug.png" alt="explode"></a>
 </div><br>
 
 Here we can see how two spheres are mistaken for the same one. (Purple)
@@ -149,6 +152,9 @@ Here we can see how two spheres are mistaken for the same one. (Purple)
 
 ## trace_bar_node
 A node was created that displayed 6 tracebars and published their results to a topic, which was later subscribed to by the cv_pcl-node to properly adjust the color filters.
+<div align="center">
+<img width=500px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/trace_bars.png" alt="explode"></a>
+</div>
 
 
 ## Licencia 
