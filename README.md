@@ -11,6 +11,9 @@
 <img width=100px src="https://img.shields.io/badge/license-Apache-orange" alt="explode"></a>
 </div>
 
+
+
+
 ## Table of Contents
 - [Problem](#problem)
 - [Option 1](#option-1)
@@ -22,6 +25,7 @@
 - [Option 2](#option-2)
 - [Proyect all the spere from 3D to 2D](#proyect-all-the-spheres-from-3d-to-2d)
 - [Detect the 3D spheres with K-means algorithm](#detect-the-3d-spheres-with-k-means-algorithm)
+- [Video](#video)
 - [trace_bar_node](#trace_bar_node)
 
 ## Problem
@@ -156,6 +160,13 @@ A node was created that displayed 6 tracebars and published their results to a t
 <img width=200px src="https://github.com/madinabeip/comp_vision_final_project/blob/main/resources/trace_bars.png" alt="explode"></a>
 </div>
 
+## Video
+https://user-images.githubusercontent.com/72991324/236585025-32731c21-1b69-46cd-b989-72af42d96daf.mp4
+
 
 ## Licencia 
 <a rel="license" href="https://www.apache.org/licenses/LICENSE-2.0"><img alt="Apache License" style="border-width:0" src="https://www.apache.org/img/asf-estd-1999-logo.jpg" /></a><br/> </a><br/>This work is licensed under a <a rel="license" href="https://www.apache.org/licenses/LICENSE-2.0">Apache license 2.0
+
+
+
+
