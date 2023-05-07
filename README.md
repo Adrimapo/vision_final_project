@@ -161,13 +161,13 @@ A node was created that displayed 6 tracebars and published their results to a t
 </div>
 
 ## Video
-https://user-images.githubusercontent.com/72991324/236585025-32731c21-1b69-46cd-b989-72af42d96daf.mp4
 
-https://user-images.githubusercontent.com/72991324/236587309-74f57e88-8d55-4104-bf21-353611937734.mp4
 
-In the second video, we can see how the k-means algorithm is not optimal for real-time detection, as clearing the initial positions of the random clusters may result in one cluster detecting multiple spheres, or multiple clusters detecting half of a sphere each.
+https://user-images.githubusercontent.com/72991324/236675652-9bac33b0-a262-487d-8c53-eb93deaed4de.mp4
 
-In the first video, the performance appears slower due to the simulator client being open, which significantly slowed down the computer's processing. In the second video, it can be observed that without the client running, the processing speed is much faster.
+
+
+We can see how the k-means algorithm is not optimal for real-time detection, as clearing the initial positions of the random clusters may result in one cluster detecting multiple spheres, or multiple clusters detecting half of a sphere each.
 
 
 ## Licencia 
