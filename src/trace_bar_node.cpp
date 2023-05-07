@@ -40,7 +40,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 
-#define WINDOW_NAME "Color"
+#define WINDOW_NAME "Trace bars"
 
 cv::Mat image_processing(const cv::Mat in_image);
 
@@ -78,13 +78,13 @@ class ComputerVisionSubscriber : public rclcpp::Node
 
         cv::namedWindow(WINDOW_NAME);    
         
-        cv::createTrackbar("rh1", WINDOW_NAME, nullptr, 255, 0); 
-        cv::createTrackbar("rh2", WINDOW_NAME, nullptr, 255, 0); 
-        cv::createTrackbar("rh3", WINDOW_NAME, nullptr, 255, 0); 
+        cv::createTrackbar(TEXT[0], WINDOW_NAME, nullptr, 10, 0); 
+        cv::createTrackbar(TEXT[1], WINDOW_NAME, nullptr, 36, 0); 
+        cv::createTrackbar(TEXT[2], WINDOW_NAME, nullptr, 20, 0); 
 
-        cv::createTrackbar("rl1", WINDOW_NAME, nullptr, 255, 0); 
-        cv::createTrackbar("rl2", WINDOW_NAME, nullptr, 255, 0); 
-        cv::createTrackbar("rl3", WINDOW_NAME, nullptr, 255, 0);             
+        cv::createTrackbar(TEXT[3], WINDOW_NAME, nullptr, 255, 0); 
+        cv::createTrackbar(TEXT[4], WINDOW_NAME, nullptr, 255, 0); 
+        cv::createTrackbar(TEXT[5], WINDOW_NAME, nullptr, 255, 0);             
         
         first_exe_ = false;
       }
@@ -98,13 +98,13 @@ class ComputerVisionSubscriber : public rclcpp::Node
       img_bridge.toImageMsg(out_image); // from cv_bridge to sensor_msgs::Image
 
 
-      short unsigned int rh1 = cv::getTrackbarPos("rh1", WINDOW_NAME); 
-      short unsigned int rh2 = cv::getTrackbarPos("rh2", WINDOW_NAME); 
-      short unsigned int rh3 = cv::getTrackbarPos("rh3", WINDOW_NAME); 
+      short unsigned int rh1 = cv::getTrackbarPos(TEXT[0], WINDOW_NAME); 
+      short unsigned int rh2 = cv::getTrackbarPos(TEXT[1], WINDOW_NAME); 
+      short unsigned int rh3 = cv::getTrackbarPos(TEXT[2], WINDOW_NAME); 
 
-      short unsigned int rl1 = cv::getTrackbarPos("rl1", WINDOW_NAME); 
-      short unsigned int rl2 = cv::getTrackbarPos("rl2", WINDOW_NAME); 
-      short unsigned int rl3 = cv::getTrackbarPos("rl3", WINDOW_NAME); 
+      short unsigned int rl1 = cv::getTrackbarPos(TEXT[3], WINDOW_NAME); 
+      short unsigned int rl2 = cv::getTrackbarPos(TEXT[4], WINDOW_NAME); 
+      short unsigned int rl3 = cv::getTrackbarPos(TEXT[5], WINDOW_NAME); 
 
       std_msgs::msg::UInt16MultiArray msg2;
       msg2.data = {rh1, rh2, rh3, rl1, rl2, rl3};
@@ -120,6 +120,7 @@ class ComputerVisionSubscriber : public rclcpp::Node
 
 
     mutable bool first_exe_ = true;
+    std::string TEXT[6] = {"Val 1", "Val 2", "Val 3", "Val 4", "Val 5", "Val 6"};
 };
 
 

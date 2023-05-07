@@ -7,7 +7,7 @@ Partes implementadas:
 - Funcionalidad extra:
   - Proyección de la pelota de 3D a 2D teniendo en cuenta el radio calculado en 3D y
     dibujarlo sobre la imagen (medio).
-  - 
+  - Aplicar K-means en 3D (avanzado).
   
 */
 
@@ -84,9 +84,9 @@ Partes implementadas:
 
 // 2D parameters
 #define CIRCLE_RAD 4
-#define TEXT_DIST 7
 #define THICKNESS 2
 #define CV_CIRCLE_RADIUS 4 
+#define TEXT_DIST 7
 
 // 3D parameters
 #define MIN_PCL 400   // Min pcl particles in a ball
@@ -95,7 +95,6 @@ Partes implementadas:
 #define R_WIDHT 1     // Width of distnace points
 #define MIN_DIST 3
 #define MAX_DIST 8
-
 
 
 pcl::PointCloud<pcl::PointXYZRGB> pcl_processing(const pcl::PointCloud<pcl::PointXYZRGB> in_pointcloud, 
@@ -110,7 +109,7 @@ Eigen::Matrix<float, 3, 4> T_matrix_pcl;
 cv::Mat T_matrix_cv;
 image_geometry::PinholeCameraModel camera_model;
 
-int pinks[6];
+//int pinks[6];
 
 
 
@@ -120,7 +119,7 @@ std::vector<cv::Rect> detect_people(cv::Mat img)
   hog.setSVMDetector(cv::HOGDescriptor::getDefaultPeopleDetector());
   std::vector<cv::Rect> found, found_filtered;
 
-  hog.detectMultiScale(img, found, 0, cv::Size(8, 8), cv::Size(32, 32), 1.05, 2);
+  hog.detectMultiScale(img, found, 0, cv::Size(8, 8), cv::Size(20, 20), 1.05, 2); 
 
   size_t i, j;
   for (i = 0; i < found.size(); i++) {
@@ -293,8 +292,8 @@ class cvNode : public rclcpp::Node
       cam_info_sub_ = this->create_subscription<sensor_msgs::msg::CameraInfo>(
       "/head_front_camera/rgb/camera_info", qos, std::bind(&cvNode::info_callback, this, std::placeholders::_1));
 
-      trace_bar_sub_ = this->create_subscription<std_msgs::msg::UInt16MultiArray>(
-      "/trace_bar", qos, std::bind(&cvNode::trace_bar_callback, this, std::placeholders::_1));
+      /* trace_bar_sub_ = this->create_subscription<std_msgs::msg::UInt16MultiArray>(
+      "/trace_bar", qos, std::bind(&cvNode::trace_bar_callback, this, std::placeholders::_1)); */
 
       publisher_ = this->create_publisher<sensor_msgs::msg::Image>(
       "cv_image", qos);
@@ -396,9 +395,12 @@ class cvNode : public rclcpp::Node
       int dist = cv::getTrackbarPos(TEXT[1], WINDOW_NAME); 
       int k_val = cv::getTrackbarPos(TEXT[2], WINDOW_NAME); 
 
-      std::vector<cv::Rect> people = detect_people(image_raw);
-      if (people.empty() && mode == 1) {
-        mode = 0;
+      std::vector<cv::Rect> people;
+      if (mode == 1) {
+        people = detect_people(image_raw);
+        if (people.empty()) {
+          mode = 0;
+        }
       }
 
       // Publish the tracebar data
@@ -420,12 +422,12 @@ class cvNode : public rclcpp::Node
       cv::waitKey(1);
     }
 
-    void trace_bar_callback(const std_msgs::msg::UInt16MultiArray msg) const
+  /*void trace_bar_callback(const std_msgs::msg::UInt16MultiArray msg) const
     {
       for (size_t i = 0; i < msg.data.size(); i++) {
         pinks[i] = static_cast<int>(msg.data[i]);
       }
-    }
+    } */
 
     void centers_3d_callback(const std_msgs::msg::Float32MultiArray::SharedPtr msg) const
     {
@@ -470,7 +472,7 @@ class cvNode : public rclcpp::Node
     rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr cv_center_pub_;
     rclcpp::Subscription<std_msgs::msg::Float32MultiArray>::SharedPtr center_3d_sub_;
 
-    rclcpp::Subscription<std_msgs::msg::UInt16MultiArray>::SharedPtr trace_bar_sub_;
+    //rclcpp::Subscription<std_msgs::msg::UInt16MultiArray>::SharedPtr trace_bar_sub_;
 
     // Tfs
     rclcpp::TimerBase::SharedPtr timer_{nullptr};
@@ -685,7 +687,7 @@ pcl::Kmeans::Centroids get_centers_k_mean(pcl::PointCloud<pcl::PointXYZRGB>::Ptr
   return centroids;
 }
 
-pcl::PointCloud<pcl::PointXYZRGB> colorPointCloudByCentroids(pcl::PointCloud<pcl::PointXYZRGB> original_cloud, 
+pcl::PointCloud<pcl::PointXYZRGB> color_point_cloud_by_centroids(pcl::PointCloud<pcl::PointXYZRGB> original_cloud, 
   pcl::Kmeans::Centroids centroids) 
 {
   pcl::PointCloud<pcl::PointXYZRGB> cloud;
@@ -759,7 +761,7 @@ pcl::PointCloud<pcl::PointXYZRGB> pcl_processing(const pcl::PointCloud<pcl::Poin
       out_pointcloud = get_pink_spheres(out_pointcloud);
 
       if (out_pointcloud.size() < MIN_PCL) {
-        std::cerr << "No balls detected" << std::endl;
+        std::cerr << "No spheres detected" << std::endl;
         out_pointcloud = draw_dist_cubes(in_pointcloud, MIN_DIST, MAX_DIST, colors);
         return out_pointcloud;
       }
@@ -798,15 +800,17 @@ pcl::PointCloud<pcl::PointXYZRGB> pcl_processing(const pcl::PointCloud<pcl::Poin
       std::vector<std::vector<float>> spheres = get_sphere_centers(out_pointcloud);
       publish_3d_centers(spheres, center_publisher);
 
-      // Gets the centers with the k mean method
-      pcl::Kmeans::Centroids centroids = get_centers_k_mean(out_pointcloud.makeShared(), k_fil);
+      if (k_fil > 0) {
+        // Gets the centers with the k mean method
+        pcl::Kmeans::Centroids centroids = get_centers_k_mean(out_pointcloud.makeShared(), k_fil);
 
-      out_pointcloud = colorPointCloudByCentroids(out_pointcloud, centroids);
+        out_pointcloud = color_point_cloud_by_centroids(out_pointcloud, centroids);
 
-      // Draws the centroids
-      for (size_t i = 0; i < centroids.size(); i++) {
-        out_pointcloud = draw_square(out_pointcloud, 
-          centroids[i][0], centroids[i][1], centroids[i][2],  purple);
+        // Draws the centroids
+        for (size_t i = 0; i < centroids.size(); i++) {
+          out_pointcloud = draw_square(out_pointcloud, 
+            centroids[i][0], centroids[i][1], centroids[i][2],  purple);
+        }
       }
     }
     break;
@@ -818,7 +822,6 @@ pcl::PointCloud<pcl::PointXYZRGB> pcl_processing(const pcl::PointCloud<pcl::Poin
 
   return out_pointcloud;
 }
-
 
 
 
@@ -839,27 +842,6 @@ std::vector<double> get_point_dist(cv::Point point, cv::Mat depth_image)
 
   std::vector<double> coords{x, y, d};
   return coords;
-}
-
-void draw_points(cv::Mat img, cv::Mat depth_image, std::vector<cv::Point> points) 
-{
-  if ( ! points.empty()) {
-    for (uint i = 0; i < points.size(); i++) {
-      cv::circle(img, points[i], CIRCLE_RAD, cv::Scalar(255,255,255), -1);
-
-      // 3d coords processing
-      std::vector<double> coords = get_point_dist(points[i], depth_image);
-      float x = std::round(coords[0] * 100) / 100;
-      float y = std::round(coords[1] * 100) / 100;
-      float z = std::round(coords[2] * 100) / 100;
-
-      // Text
-      cv::Point text_point = cv::Point(points[i].x + TEXT_DIST, points[i].y + TEXT_DIST+10);
-      std::string text = "[" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + "]";
-
-      putText(img, text, text_point, cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255,255,255));
-    }
-  }
 }
 
 std::vector<cv::Point> draw_dist_lines(cv::Mat img, int dist) 
@@ -904,6 +886,7 @@ std::vector<cv::Point> draw_dist_lines(cv::Mat img, int dist)
 
     putText(img, std::to_string(i), cv::Point(x2 + TEXT_DIST, y2 + TEXT_DIST), 
       cv::FONT_HERSHEY_SIMPLEX, 0.5, colors[i]);
+
   }
   return points;
 } // Returns the last 2 points
@@ -945,22 +928,24 @@ cv::Mat draw_circles(cv::Mat original, std::vector<cv::Vec3f> circles, cv::Scala
     return circles_img;
 }
 
-std::vector<cv::Vec3f> detect_circles(cv::Mat color_filtered)
+std::vector<cv::Vec3f> detect_circles_hough(cv::Mat color_filtered)
 {
   cv::Mat gray;
 
   const int min_radius = 3;
   const int max_radius = 100;
 
+  const int canny_threshold = 50;
+  const int center_threshold = 10;
+
   cvtColor(color_filtered, gray, cv::COLOR_BGR2GRAY);
   medianBlur(gray, gray, 5);
 
   std::vector<cv::Vec3f> circles;
   HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1,
-                gray.rows/10,  // Minimum distance between detected centers   10
-               36, 10, // Internal Canny threshold and center threshold   70, 20
-               min_radius, max_radius
-  );
+                gray.rows/6,  // Minimum distance between detected centers  
+               canny_threshold, center_threshold, min_radius, max_radius);
+
   return circles;
 }
 
@@ -978,7 +963,6 @@ void publish_centers(std::vector<cv::Vec3f> centers, cv::Mat depth_image, rclcpp
     pub_msg_data.push_back((float)points3d[0]);  // x
     pub_msg_data.push_back((float)points3d[1]);  // y
     pub_msg_data.push_back((float)points3d[2]);  // z
-
   }
 
   message.data = pub_msg_data;
@@ -1003,7 +987,7 @@ cv::Mat image_processing(cv::Mat in_image, cv::Mat depth_image, int mode, int di
       cv::Scalar pinkUpper(177, 255, 255);
 
       cv::Mat pink_filter = hsv_filter(out_image, pinkLower, pinkUpper);
-      std::vector<cv::Vec3f> centers = detect_circles(pink_filter);
+      std::vector<cv::Vec3f> centers = detect_circles_hough(pink_filter);
 
       publish_centers(centers, depth_image, center_publisher);
       out_image = draw_circles(out_image, centers, cv::Scalar(0, 0, 255), cv::Scalar(0, 255, 0));  // Draws 2d centers
