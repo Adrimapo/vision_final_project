@@ -21,6 +21,7 @@
 - [Comunication between nodes](#comunication-between-nodes)
 - [3D center proyection in 2D](#3d-center-proyection-in-2d)
 - [2D center proyection in 3D](#2d-center-proyection-in-3d)
+- [Distance marks](#distance-marks)
 - [Person tracking](#person-tracking)
 - [Option 2](#option-2)
 - [Proyect all the spere from 3D to 2D](#proyect-all-the-spheres-from-3d-to-2d)
@@ -79,6 +80,11 @@ Note that this operation will give a 3-dimensional vector. We need to divide the
 As in the previous case, we obtain the coordinates from the callback. In this case, it is simpler since the topic publishes the coordinates in 3D. All we have to do is store the points in a std::vector<std::vector<float>>, which is an attribute of the node's class, and then draw them in the point cloud with the 'draw_square' function.
 
 
+-----------------------------------------------------------------------
+ 
+### Distance marks
+For the distance marks on both nodes, the points where the marks are to be placed were first created in the base_footprint coordinate system. Afterwards, the points were translated and rotated to the camera's tf. In the case of the OpenCV node, the 3D point was also transformed into a 2D point as in the previous sections.
+ 
 -----------------------------------------------------------------------
 
 ### Person tracking
