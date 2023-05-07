@@ -166,8 +166,9 @@ A node was created that displayed 6 tracebars and published their results to a t
 https://user-images.githubusercontent.com/72991324/236675652-9bac33b0-a262-487d-8c53-eb93deaed4de.mp4
 
 
-
 We can see how the k-means algorithm is not optimal for real-time detection, as clearing the initial positions of the random clusters may result in one cluster detecting multiple spheres, or multiple clusters detecting half of a sphere each.
+
+Sometimes the PCL takes time to update due to the computer's computing capacity.
 
 
 ## Licencia 
