@@ -21,6 +21,7 @@
 - [Comunication between nodes](#comunication-between-nodes)
 - [3D center proyection in 2D](#3d-center-proyection-in-2d)
 - [2D center proyection in 3D](#2d-center-proyection-in-3d)
+- [Distance marks](#distance-marks)
 - [Person tracking](#person-tracking)
 - [Option 2](#option-2)
 - [Proyect all the spere from 3D to 2D](#proyect-all-the-spheres-from-3d-to-2d)
@@ -79,6 +80,11 @@ Note that this operation will give a 3-dimensional vector. We need to divide the
 As in the previous case, we obtain the coordinates from the callback. In this case, it is simpler since the topic publishes the coordinates in 3D. All we have to do is store the points in a std::vector<std::vector<float>>, which is an attribute of the node's class, and then draw them in the point cloud with the 'draw_square' function.
 
 
+-----------------------------------------------------------------------
+ 
+### Distance marks
+For the distance marks on both nodes, the points where the marks are to be placed were first created in the base_footprint coordinate system. Afterwards, the points were translated and rotated to the camera's tf. In the case of the OpenCV node, the 3D point was also transformed into a 2D point as in the previous sections.
+ 
 -----------------------------------------------------------------------
 
 ### Person tracking
@@ -161,13 +167,14 @@ A node was created that displayed 6 tracebars and published their results to a t
 </div>
 
 ## Video
-https://user-images.githubusercontent.com/72991324/236585025-32731c21-1b69-46cd-b989-72af42d96daf.mp4
 
-https://user-images.githubusercontent.com/72991324/236587309-74f57e88-8d55-4104-bf21-353611937734.mp4
 
-In the second video, we can see how the k-means algorithm is not optimal for real-time detection, as clearing the initial positions of the random clusters may result in one cluster detecting multiple spheres, or multiple clusters detecting half of a sphere each.
+https://user-images.githubusercontent.com/72991324/236675652-9bac33b0-a262-487d-8c53-eb93deaed4de.mp4
 
-In the first video, the performance appears slower due to the simulator client being open, which significantly slowed down the computer's processing. In the second video, it can be observed that without the client running, the processing speed is much faster.
+
+We can see how the k-means algorithm is not optimal for real-time detection, as clearing the initial positions of the random clusters may result in one cluster detecting multiple spheres, or multiple clusters detecting half of a sphere each.
+
+Sometimes the PCL takes time to update due to the computer's computing capacity.
 
 
 ## Licencia 
