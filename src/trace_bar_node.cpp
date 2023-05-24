@@ -78,9 +78,9 @@ class ComputerVisionSubscriber : public rclcpp::Node
 
         cv::namedWindow(WINDOW_NAME);    
         
-        cv::createTrackbar(TEXT[0], WINDOW_NAME, nullptr, 10, 0); 
-        cv::createTrackbar(TEXT[1], WINDOW_NAME, nullptr, 36, 0); 
-        cv::createTrackbar(TEXT[2], WINDOW_NAME, nullptr, 20, 0); 
+        cv::createTrackbar(TEXT[0], WINDOW_NAME, nullptr, 255, 0); 
+        cv::createTrackbar(TEXT[1], WINDOW_NAME, nullptr, 255, 0); 
+        cv::createTrackbar(TEXT[2], WINDOW_NAME, nullptr, 255, 0); 
 
         cv::createTrackbar(TEXT[3], WINDOW_NAME, nullptr, 255, 0); 
         cv::createTrackbar(TEXT[4], WINDOW_NAME, nullptr, 255, 0); 

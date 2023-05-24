@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(computer_vision)
+project(vision_project)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -56,13 +56,13 @@ install(TARGETS trace_bar_node
 
 
 # PCL_p6 node
-add_executable(cv_pcl_node src/cv_pcl_node.cpp)
-target_include_directories(cv_pcl_node PUBLIC
+add_executable(pfinal src/cv_pcl_node.cpp)
+target_include_directories(pfinal PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_features(cv_pcl_node PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_compile_features(pfinal PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(
-  cv_pcl_node
+  pfinal
   "rclcpp"
   "image_transport"
   "image_geometry"
@@ -78,9 +78,9 @@ ament_target_dependencies(
   "geometry_msgs"
 )
 
-target_link_libraries(cv_pcl_node ${PCL_LIBRARIES})
+target_link_libraries(pfinal ${PCL_LIBRARIES})
 
-install(TARGETS cv_pcl_node
+install(TARGETS pfinal
   DESTINATION lib/${PROJECT_NAME})
 
   
